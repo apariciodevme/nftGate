@@ -1,43 +1,37 @@
-import React, { useEffect } from "react";
-import { ThirdwebSDK } from "@thirdweb-dev/sdk";
-import { useLogout, useUser } from "@thirdweb-dev/react";
-import { useRouter } from "next/router";
+import { ConnectWallet, useAddress, Web3Button } from "@thirdweb-dev/react";
+import Link from "next/link";
 
-export default function Home() {
-  const { logout } = useLogout();
-  const { isLoggedIn, isLoading } = useUser();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!isLoading && !isLoggedIn) {
-      router.push("/login");
-    }
-  }, [isLoading, isLoggedIn, router]);
+export default function Login() {
+  const address = useAddress();
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen space-y-6 bg-black ">
+    <div className="flex flex-col items-center justify-center h-screen bg-black ">
       <h1 className="text-4xl font-semibold tracking-tight text-white lg:text-6xl">
-        ✨Welcome to the{" "}
-        <span className="text-transparent bg-gradient-to-r from-orange-400 to-yellow-400 bg-clip-text ">
-          private website
+        <span className="text-transparent bg-gradient-to-r from-orange-300 to-orange-500 bg-clip-text ">
+          NFT
         </span>{" "}
-        ✨
+        Gated Content 👀
       </h1>
       <p className="mx-20 mt-4 text-lg text-center text-gray-400 lg:text-2xl lg:mt-8 lg:mx-60">
-        You made it! Thank you for supporting our project and being part of
-        it.{" "}
+        This content is reserved for members only! Acquire one of our NFTs to
+        unlock the content
       </p>
-      <button
-        className="px-8 py-3 text-lg font-medium text-gray-100 transition duration-150 rounded-lg hover:brightness-125"
-        style={{
-          backgroundColor: "rgb(22, 22, 24)",
-          borderColor: "#2e2e32",
-          borderStyle: "solid",
-          borderWidth: "0.8px",
-        }}
-      >
-        Logout
-      </button>
+      <p className="">
+        You cannot access the <Link href="/">main page</Link> unless you own an
+        NFT from our collection!
+      </p>
+      <hr />
+      <>
+        {address ? (
+          <p>
+            Welcome, {address?.slice(0, 6)}...{address?.slice(-4)}
+          </p>
+        ) : (
+          <p>Please connect your wallet to continue.</p>
+        )}
+
+        <ConnectWallet className="p-4 " />
+      </>
     </div>
   );
 }
